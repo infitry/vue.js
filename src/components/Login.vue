@@ -1,21 +1,23 @@
 <template>
   <div class="hello test">
-      Hi {{ num }}
-      <button v-on:click="plus">클릭</button>
+      {{ msg }}
+      <input v-model="id" />
+      <button v-on:click="login">로그인</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TestCom',
+  name: 'Login',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      num: 2
+      msg: '로그인 해 주세요.',
+      num: 2,
+      id: ''
     }
   },
   methods: {
-    plus () {
+    login () {
       const self = this
       this.$axios.get('http://localhost:8000/data', {
         params : {
@@ -23,7 +25,8 @@ export default {
         }
       })
       .then(function (response) {
-        self.num = response.data
+          localStorage.setItem('user', self.id)
+          self.$router.push('/test')
       })
     }
   }

@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Login from '@/components/Login'
 import HelloWorld from '@/components/HelloWorld'
 import TestCom from '@/components/TestCom'
 
-Vue.use(Router)
+Vue.use()
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -14,9 +15,28 @@ export default new Router({
       component: HelloWorld
     },
     {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
       path: '/test',
       name: 'testComponent',
       component: TestCom
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const publicPages = ['HelloWorld', 'Login'];
+  const authRequired = !publicPages.includes(to.name);
+  const loggedIn = localStorage.getItem('user');
+
+  if (authRequired && !loggedIn) {
+    router.push({name: 'Login', query: {to: to.path}});
+  } else {
+    next();
+  }
+});
+
+export default router
